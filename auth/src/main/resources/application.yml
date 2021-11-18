@@ -1,0 +1,19 @@
+server:
+  port: 9999
+spring:
+  application:
+    name: auth
+  cloud:
+    nacos:
+      #注册中心
+      discovery:
+        server-addr: localhost:8848
+        namespace: 441d5f9a-5f13-4878-9b94-10ecd3be151c
+      #配置中心
+      config:
+        file-extension: yml
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        #共享配置文件
+        shared-dataids: application.${spring.cloud.nacos.config.file-extension}
+        username: nacos
+        password: nacos
