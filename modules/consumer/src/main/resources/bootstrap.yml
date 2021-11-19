@@ -1,8 +1,9 @@
+##服务消费者
 server:
-  port: 9991
+  port: 9992
 spring:
   application:
-    name: auth
+    name: consumer
   cloud:
     nacos:
       #注册中心
@@ -16,9 +17,3 @@ spring:
         #共享配置文件
         shared-dataids: application.${spring.cloud.nacos.config.file-extension}
         namespace: 441d5f9a-5f13-4878-9b94-10ecd3be151c
-  #---将下列配置放置nacos进行管理
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/tianjun-cloud?autoReconnect=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
-#    username: root
-#    password: root

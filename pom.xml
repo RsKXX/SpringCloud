@@ -48,12 +48,6 @@
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
 
-    <!-- mybatis-plus -->
-    <dependency>
-      <groupId>com.baomidou</groupId>
-      <artifactId>mybatis-plus-boot-starter</artifactId>
-      <version>${mybatis-plus.version}</version>
-    </dependency>
     <!--mysql-->
     <dependency>
       <groupId>mysql</groupId>
@@ -65,7 +59,11 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
-
+    <!-- web -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
     <!-- 动态数据源 -->
 <!--    <dependency>-->
 <!--      <groupId>com.baomidou</groupId>-->
@@ -73,12 +71,7 @@
 <!--      <version>${mybatis-dynamic.version}</version>-->
 <!--    </dependency>-->
 
-    <!-- druid -->
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>druid-spring-boot-starter</artifactId>
-      <version>${druid.version}</version>
-    </dependency>
+
     <!-- 工具集 -->
     <dependency>
       <groupId>cn.hutool</groupId>
@@ -95,6 +88,18 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- mybatis-plus -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-boot-starter</artifactId>
+        <version>${mybatis-plus.version}</version>
+      </dependency>
+      <!-- druid -->
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid-spring-boot-starter</artifactId>
+        <version>${druid.version}</version>
+      </dependency>
       <!-- Spring Cloud 微服务 -->
       <dependency>
         <groupId>org.springframework.cloud</groupId>

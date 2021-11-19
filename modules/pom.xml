@@ -10,6 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>modules</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>provider</module>
+        <module>consumer</module>
+    </modules>
 
 
 </project>
