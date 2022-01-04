@@ -22,10 +22,6 @@ import java.util.*;
 @Slf4j
 @Configuration
 public class ShiroConfig {
-    @Autowired
-    private Environment env;
-
-
     /**
      * Filter Chain定义说明
      *
@@ -40,18 +36,30 @@ public class ShiroConfig {
         // 拦截器
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         // 配置不会被拦截的链接 顺序判断
-        filterChainDefinitionMap.put("/**","anon");
-        // 添加自己的过滤器并且取名为jwt
-        Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
-        //如果cloudServer为空 则说明是单体 需要加载跨域配置【微服务跨域切换】
-//        Object cloudServer = env.getProperty(CommonConstant.CLOUD_SERVER_KEY);
-//        filterMap.put("jwt", new JwtFilter(cloudServer==null));
-//        shiroFilterFactoryBean.setFilters(filterMap);
-        // <!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边
-//        filterChainDefinitionMap.put("/**", "jwt");
+        // 添加静态资源和swagger放开
+        filterChainDefinitionMap.put("/doc.html","anon");
+        filterChainDefinitionMap.put("/**/*.js", "anon");
+        filterChainDefinitionMap.put("/**/*.css", "anon");
+        filterChainDefinitionMap.put("/**/*.html", "anon");
+        filterChainDefinitionMap.put("/**/*.svg", "anon");
+        filterChainDefinitionMap.put("/**/*.pdf", "anon");
+        filterChainDefinitionMap.put("/**/*.jpg", "anon");
+        filterChainDefinitionMap.put("/**/*.png", "anon");
+        filterChainDefinitionMap.put("/**/*.ico", "anon");
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMap.put("/swagger**/**", "anon");
+        filterChainDefinitionMap.put("/v3/**", "anon");
+        // 将基础的放开，登录 注册，添加角色这些
+        filterChainDefinitionMap.put("/basic/**","anon");
+        //自定义过滤器
+        Map<String, Filter> filterMap = new HashMap<>(1);
+        filterMap.put("token",new TokenFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
+//        filterChainDefinitionMap.put("/**","authc");
+        filterChainDefinitionMap.put("/**","token");
         // 未授权界面返回JSON
-        shiroFilterFactoryBean.setUnauthorizedUrl("/sys/common/403");
-        shiroFilterFactoryBean.setLoginUrl("/sys/common/403");
+//        shiroFilterFactoryBean.setUnauthorizedUrl("/common/403");
+//        shiroFilterFactoryBean.setLoginUrl("/common/403");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -60,18 +68,6 @@ public class ShiroConfig {
     public DefaultWebSecurityManager securityManager(ShiroRealm myRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myRealm);
-        /*
-         * 关闭shiro自带的session，详情见文档
-         * http://shiro.apache.org/session-management.html#SessionManagement-
-         * StatelessApplications%28Sessionless%29
-         */
-        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
-        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
-        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
-        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
-        securityManager.setSubjectDAO(subjectDAO);
-        //自定义缓存实现,使用redis
-//        securityManager.setCacheManager(redisCacheManager());
         return securityManager;
     }
 

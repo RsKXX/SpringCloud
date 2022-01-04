@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Api(tags="测试user")
+@Api(tags="基础")
 @RestController
-@RequestMapping("/test/user")
+@RequestMapping("/basic")
 @Slf4j
 public class UserController {
     @Autowired

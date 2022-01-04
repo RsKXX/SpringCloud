@@ -50,10 +50,6 @@ spring:
       shutdown-timeout: 100ms
     password: ''
     port: 6379
-#swagger
-knife4j:
-  #开启增强配置
-  enable: true
 #mybatis plus 设置
 mybatis-plus:
   mapper-locations: classpath*:com/shiro/mapper/**/xml/*Mapper.xml
