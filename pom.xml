@@ -19,6 +19,7 @@
     <module>oauth</module>
     <module>modules</module>
       <module>shiro</module>
+      <module>mybatis</module>
   </modules>
   <packaging>pom</packaging>
 
