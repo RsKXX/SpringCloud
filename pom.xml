@@ -20,6 +20,7 @@
     <module>modules</module>
       <module>shiro</module>
       <module>mybatis</module>
+      <module>transaction</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -88,7 +89,7 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- mybatis-plus -->
+      <!-- transaction-plus -->
       <dependency>
         <groupId>com.baomidou</groupId>
         <artifactId>mybatis-plus-boot-starter</artifactId>
