@@ -4,8 +4,10 @@ import com.shiro.data.vo.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,7 @@ public class TestController {
     @GetMapping(value = "/getUserRecourse")
     @RequiresRoles("user")
     public Result getUserRecourse() {
+        Subject subject = SecurityUtils.getSubject();
         Result<Object> result = new Result<>();
         result.setMessage("获取user资源");
         return result;

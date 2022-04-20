@@ -72,13 +72,13 @@ public class ShiroRealm extends AuthorizingRealm {
         }
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
-        // 设置用户拥有的角色集合，比如“admin,test”
+        // 设置用户拥有的角色集合，调用写好的getRolesByUserName，通过username查询
         List<String> roleList = roleService.getRolesByUserName(username);
         Set<String> roleSet = new HashSet<>(roleList);
         System.out.println(roleSet);
         info.setRoles(roleSet);
 
-        // 设置用户拥有的权限集合，比如“sys:role:add,sys:user:add”
+        // 设置用户拥有的权限集合，调用写好的getPermissionsByUserName，通过username查询
         List<String> permissionList = permissionService.getPermissionsByUserName(username);
         Set<String> permissionSet = new HashSet<>(permissionList);
         info.addStringPermissions(permissionSet);

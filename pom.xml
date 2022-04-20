@@ -18,9 +18,10 @@
     <module>gateway</module>
     <module>oauth</module>
     <module>modules</module>
-      <module>shiro</module>
-      <module>mybatis</module>
-      <module>transaction</module>
+    <module>shiro</module>
+    <module>mybatis</module>
+    <module>transaction</module>
+    <module>canal</module>
   </modules>
   <packaging>pom</packaging>
 
