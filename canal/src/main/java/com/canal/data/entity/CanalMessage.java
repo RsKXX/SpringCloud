@@ -30,6 +30,12 @@ public class CanalMessage<T> {
     @JsonProperty("isDdl")
     private Boolean isDdl;
 
+    @JsonProperty("sqlType")
+    private T sqlType;
+
+    @JsonProperty("mysqlType")
+    private T mysqlType;
+
     @JsonProperty("old")
     private List<T> old;
 
