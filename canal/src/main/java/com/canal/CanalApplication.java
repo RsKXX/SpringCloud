@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import javax.annotation.Resource;
 @EnableAsync
 @SpringBootApplication
+@MapperScan("com.canal.mapper")
 public class CanalApplication implements CommandLineRunner {
 
     @Resource
@@ -20,7 +21,7 @@ public class CanalApplication implements CommandLineRunner {
     }
     @Override
     public void run(String... strings){
-        canalUtil.startMonitorSQL();
+//        canalUtil.startMonitorSQL();
     }
 
 }

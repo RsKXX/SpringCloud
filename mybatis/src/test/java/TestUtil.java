@@ -2,7 +2,7 @@ import com.mybatis.data.entity.User;
 import com.mybatis.data.entity.UserInformation;
 import com.mybatis.service.UserInformationService;
 import com.mybatis.service.UserService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class TestUtil {
@@ -11,6 +11,7 @@ public class TestUtil {
     private UserInformationService userInformationService;
     @Autowired
     private UserService userService;
+
 
     @Test
     public void Test(){
