@@ -23,6 +23,7 @@
     <module>mybatis</module>
     <module>transaction</module>
     <module>canal</module>
+      <module>redisson</module>
   </modules>
   <packaging>pom</packaging>
 
