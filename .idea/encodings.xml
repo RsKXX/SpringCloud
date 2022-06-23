@@ -7,6 +7,8 @@
     <file url="file://$PROJECT_DIR$/modules/provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mybatis/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/oauth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbitmq/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/redisson/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shiro/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/transaction/src/main/java" charset="UTF-8" />
   </component>

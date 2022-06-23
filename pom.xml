@@ -24,6 +24,7 @@
     <module>transaction</module>
     <module>canal</module>
       <module>redisson</module>
+      <module>rabbitmq</module>
   </modules>
   <packaging>pom</packaging>
 
