@@ -16,18 +16,22 @@ public class RabbitConsumer {
 
     @RabbitListener(queues = RabbitMqConstant.QUEUE_ONE)
     public void listenerQueueOne(Message message, Channel channel) throws IOException {
+        try{
         channel.basicQos(1);
         String str = new String(message.getBody());
         log.info(str);
+        //抛出错误。
+        //int = 1/0;
         channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
-
-        Boolean redelivered = message.getMessageProperties().getRedelivered();
-        if(redelivered){
-            log.error("异常重试次数已到达设置次数，将发送到死信交换机");
-            channel.basicReject(message.getMessageProperties().getDeliveryTag(),false);
-        }else {
-            log.error("消息即将返回队列处理重试");
-            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+        }catch (Exception e) {
+            Boolean redelivered = message.getMessageProperties().getRedelivered();
+            if (redelivered) {
+                log.error("异常重试次数已到达设置次数，将发送到死信交换机");
+                channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
+            } else {
+                log.error("消息即将返回队列处理重试");
+                channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+            }
         }
     }
 }
