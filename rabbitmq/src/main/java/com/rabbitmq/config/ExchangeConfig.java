@@ -2,12 +2,11 @@ package com.rabbitmq.config;
 
 
 import com.rabbitmq.constant.RabbitMqConstant;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.HashMap;
 
 @Configuration
 public class ExchangeConfig {
@@ -61,6 +60,67 @@ public class ExchangeConfig {
   /**
    * =========================================================== 数据topic 交换器 ===== end
    **/
+
+
+
+
+
+  @Bean("directExchange")
+  public DirectExchange directExchange(){
+    return new DirectExchange(RabbitMqConstant.EXCHANGE_ONE);
+  }
+
+  @Bean("deadExchange")
+  public DirectExchange deadExchange(){
+    return new DirectExchange(RabbitMqConstant.DEAD_EXCHANGE_ONE);
+  }
+
+
+  @Bean("queueOne")
+  public Queue queueOne(){
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("x-dead-letter-exchange",RabbitMqConstant.DEAD_EXCHANGE_ONE);
+    map.put("x-dead-letter-routing-key",RabbitMqConstant.DEAD_ROUTE_KEY_ONE);
+    return QueueBuilder.durable(RabbitMqConstant.QUEUE_ONE).withArguments(map).build();
+  }
+
+  @Bean("queueTwo")
+  public Queue queueTwo(){
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("x-dead-letter-exchange",RabbitMqConstant.DEAD_EXCHANGE_ONE);
+    map.put("x-dead-letter-routing-key",RabbitMqConstant.DEAD_ROUTE_KEY_TWO);
+    return QueueBuilder.durable(RabbitMqConstant.QUEUE_TWO).withArguments(map).build();
+  }
+
+  @Bean("deadQueueOne")
+  public Queue deadQueueOne(){
+    return new Queue(RabbitMqConstant.DEAD_QUEUE_ONE);
+  }
+
+  @Bean("deadQueueOne")
+  public Queue deadQueueTwo(){
+    return new Queue(RabbitMqConstant.DEAD_QUEUE_TWO);
+  }
+
+  @Bean
+  public Binding bindingQueueOne(){
+    return BindingBuilder.bind(queueOne()).to(directExchange()).with(RabbitMqConstant.ROUTE_KEY_ONE);
+  }
+
+  @Bean
+  public Binding bindingQueueTwo(){
+    return BindingBuilder.bind(queueTwo()).to(directExchange()).with(RabbitMqConstant.ROUTE_KEY_TWO);
+  }
+
+  @Bean
+  public Binding bindingDeadQueueOne(){
+    return BindingBuilder.bind(deadQueueOne()).to(deadExchange()).with(RabbitMqConstant.DEAD_ROUTE_KEY_ONE);
+  }
+
+  @Bean
+  public Binding bindingDeadQueueTwo(){
+    return BindingBuilder.bind(deadQueueTwo()).to(deadExchange()).with(RabbitMqConstant.DEAD_ROUTE_KEY_TWO);
+  }
 
 
 }
