@@ -36,26 +36,26 @@ public class ExchangeConfig {
   /**
    * ============================= 数据topic 交换器 ===== start
    **/
-  @Bean
-  public TopicExchange exchange() {
-    return new TopicExchange(RabbitMqConstant.EXCHANGE_TOPIC, true, false, null);
-  }
-
-  @Bean
-  public Queue infoQueue() {
-    return new Queue(RabbitMqConstant.QUEUE_INFO, true, false, false);
-  }
-
-
-  @Bean
-  public Binding infoBinding() {
-    //链式写法，绑定交换机和队列，并设置匹配键
-    return BindingBuilder
-        //绑定队列
-        .bind(infoQueue())
-        //到交换机
-        .to(exchange()).with(RabbitMqConstant.ROUTING_KEY);
-  }
+//  @Bean
+//  public TopicExchange exchange() {
+//    return new TopicExchange(RabbitMqConstant.EXCHANGE_TOPIC, true, false, null);
+//  }
+//
+//  @Bean
+//  public Queue infoQueue() {
+//    return new Queue(RabbitMqConstant.QUEUE_INFO, true, false, false);
+//  }
+//
+//
+//  @Bean
+//  public Binding infoBinding() {
+//    //链式写法，绑定交换机和队列，并设置匹配键
+//    return BindingBuilder
+//        //绑定队列
+//        .bind(infoQueue())
+//        //到交换机
+//        .to(exchange()).with(RabbitMqConstant.ROUTING_KEY);
+//  }
 
   /**
    * =========================================================== 数据topic 交换器 ===== end

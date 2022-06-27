@@ -1,5 +1,7 @@
 package com.rabbitmq.config;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -17,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 
 @Configuration
+@Slf4j
 public class RabbitMqConfig {
 
   @Autowired
@@ -34,7 +37,8 @@ public class RabbitMqConfig {
   public RabbitListenerContainerFactory<?> rabbitListenerContainerFactory(ConnectionFactory connectionFactory){
     SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
     factory.setConnectionFactory(connectionFactory);
-    factory.setMessageConverter(new Jackson2JsonMessageConverter());
+    factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+//    factory.setMessageConverter(new Jackson2JsonMessageConverter());
     return factory;
   }
 
@@ -43,8 +47,8 @@ public class RabbitMqConfig {
   @PostConstruct
   public void configureRabbitTemplate() {
     // 比如在这里设置接收消息后的回调方法
-//    rabbitTemplate.setConfirmCallback(new ConfirmCallbackImpl());
-//    rabbitTemplate.setReturnsCallback(new ReturnsCallbackImpl());
+    rabbitTemplate.setConfirmCallback(new ConfirmCallbackImpl());
+    rabbitTemplate.setReturnsCallback(new ReturnsCallbackImpl());
   }
 
 
@@ -62,7 +66,9 @@ public class RabbitMqConfig {
      */
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-
+        log.info("success：data："+correlationData);
+        log.info("success：ack："+ack);
+        log.info("success：cause："+cause);
     }
   }
 
@@ -75,7 +81,7 @@ public class RabbitMqConfig {
 
     @Override
     public void returnedMessage(ReturnedMessage returned) {
-
+      log.info("return：data："+returned);
     }
   }
 }

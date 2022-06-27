@@ -21,7 +21,7 @@ public class RabbitConsumer {
         String str = new String(message.getBody());
         log.info(str);
         //抛出错误。
-        //int = 1/0;
+//        int i = 1/0;
         channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
         }catch (Exception e) {
             Boolean redelivered = message.getMessageProperties().getRedelivered();

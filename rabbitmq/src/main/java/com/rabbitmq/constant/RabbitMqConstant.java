@@ -7,13 +7,13 @@ public class RabbitMqConstant {
     /**
      * exchange
      */
-    public static final String EXCHANGE_TOPIC = "study.exchange";
-    /**
-     * 队列
-     */
-    public static final String QUEUE_INFO = "study.queue";
-
-    public static final String ROUTING_KEY = "study.routing.key";
+//    public static final String EXCHANGE_TOPIC = "study.exchange";
+//    /**
+//     * 队列
+//     */
+//    public static final String QUEUE_INFO = "study.queue";
+//
+//    public static final String ROUTING_KEY = "study.routing.key";
 
 
 
