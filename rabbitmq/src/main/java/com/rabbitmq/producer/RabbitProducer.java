@@ -2,6 +2,8 @@ package com.rabbitmq.producer;
 
 
 import com.rabbitmq.constant.RabbitMqConstant;
+import com.rabbitmq.data.entity.TestTime;
+import com.rabbitmq.service.TestTimeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -20,6 +22,9 @@ public class RabbitProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private TestTimeService testTimeService;
+
     public void sendMessageToOne(String str){
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.setContentType("application/json");
@@ -30,7 +35,10 @@ public class RabbitProducer {
 
 
     public void sendMessageToTwo(String str){
+        TestTime time = new TestTime().setInformation(str).setStartTime(new Date());
+        testTimeService.save(time);
         MessageProperties messageProperties = new MessageProperties();
+        str = str+","+time.getId();
         messageProperties.setContentType("application/json");
         Message message = new Message(str.getBytes(StandardCharsets.UTF_8),messageProperties);
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
