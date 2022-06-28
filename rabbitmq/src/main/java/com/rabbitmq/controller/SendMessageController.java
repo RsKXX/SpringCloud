@@ -19,4 +19,9 @@ public class SendMessageController {
     public void sendMessageToOne(@PathVariable("str") String str){
         rabbitProducer.sendMessageToOne(str);
     }
+
+    @GetMapping("/test1/{str}")
+    public void sendMessageToTwo(@PathVariable("str") String str){
+        rabbitProducer.sendMessageToTwo(str);
+    }
 }

@@ -7,6 +7,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Component
 @Slf4j
 public class RabbitDeadConsumer {
@@ -16,7 +19,7 @@ public class RabbitDeadConsumer {
         try{
             channel.basicQos(1);
             String s = new String(message.getBody());
-            log.info("处理死信"+s);
+            log.info("处理死信1"+s);
             //在此处记录到数据库、报警之类的操作
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }catch (Exception e){
@@ -31,6 +34,7 @@ public class RabbitDeadConsumer {
         try{
             channel.basicQos(1);
             String s = new String(message.getBody());
+            log.info("endTime:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             log.info("处理死信"+s);
             //在此处记录到数据库、报警之类的操作
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);

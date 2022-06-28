@@ -8,6 +8,9 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 import java.nio.charset.StandardCharsets;
 
@@ -31,6 +34,8 @@ public class RabbitProducer {
         messageProperties.setContentType("application/json");
         Message message = new Message(str.getBytes(StandardCharsets.UTF_8),messageProperties);
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        log.info("startTime:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        message.getMessageProperties().setExpiration("10000");
         rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE_ONE,RabbitMqConstant.ROUTE_KEY_TWO,message,correlationData);
     }
 
