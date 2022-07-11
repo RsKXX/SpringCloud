@@ -24,4 +24,10 @@ public class SendMessageController {
     public void sendMessageToTwo(@PathVariable("str") String str){
         rabbitProducer.sendMessageToTwo(str);
     }
+
+
+    @GetMapping("/test2/{str}")
+    public void sendMessageToDelayedQueue(@PathVariable("str") String str){
+        rabbitProducer.sendMessageToDelayedQueue(str,10000);
+    }
 }

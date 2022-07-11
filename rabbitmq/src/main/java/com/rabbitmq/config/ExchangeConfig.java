@@ -7,99 +7,69 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class ExchangeConfig {
 
-  //---------------------死信队列开始
 
   /**
-   * 死信队列跟交换机类型没有关系 不一定为directExchange  不影响该类型交换机的特性.
+   * 交换器
+   * @return
    */
-//  @Bean
-//  public Exchange directExchange() {
-//    return ExchangeBuilder.directExchange(RabbitMqConstant.EXCHANGE_DIRECT).durable(true).build();
-//  }
-//
-//  /**
-//   * 死信队列
-//   *
-//   * @return
-//   */
-//  @Bean
-//  public Queue deadLetterQueue() {
-//    return QueueBuilder.durable(RabbitMqConstant.DEAD_LETTER_QUEUE).deadLetterExchange(RabbitMqConstant.EXCHANGE_DIRECT)
-//        .deadLetterRoutingKey("deadKey").build();
-//  }
-
-  //---------------------死信部分结束
-  /**
-   * ============================= 数据topic 交换器 ===== start
-   **/
-//  @Bean
-//  public TopicExchange exchange() {
-//    return new TopicExchange(RabbitMqConstant.EXCHANGE_TOPIC, true, false, null);
-//  }
-//
-//  @Bean
-//  public Queue infoQueue() {
-//    return new Queue(RabbitMqConstant.QUEUE_INFO, true, false, false);
-//  }
-//
-//
-//  @Bean
-//  public Binding infoBinding() {
-//    //链式写法，绑定交换机和队列，并设置匹配键
-//    return BindingBuilder
-//        //绑定队列
-//        .bind(infoQueue())
-//        //到交换机
-//        .to(exchange()).with(RabbitMqConstant.ROUTING_KEY);
-//  }
-
-  /**
-   * =========================================================== 数据topic 交换器 ===== end
-   **/
-
-
-
-
-
-  @Bean("directExchange")
+  @Bean
   public DirectExchange directExchange(){
-    return new DirectExchange(RabbitMqConstant.EXCHANGE_ONE);
+    return new DirectExchange(RabbitMqConstant.EXCHANGE);
   }
 
-  @Bean("deadExchange")
+  /**
+   * 死信队列交换器
+   * @return
+   */
+  @Bean
   public DirectExchange deadExchange(){
-    return new DirectExchange(RabbitMqConstant.DEAD_EXCHANGE_ONE);
+    return new DirectExchange(RabbitMqConstant.DEAD_EXCHANGE);
   }
 
+  /**
+   * 延时队列交换器
+   * @return
+   */
+  @Bean
+  public CustomExchange delayedExchange()
+  {
+    Map<String,Object> args = new HashMap<>(1);
+    args.put("x-delayed-type", "direct");
+    return new CustomExchange(RabbitMqConstant.DELAYED_EXCHANGE,"x-delayed-message",true,false,args);
+  }
 
-  @Bean("queueOne")
+  //队列1
+  @Bean
   public Queue queueOne(){
-    HashMap<String, Object> map = new HashMap<>();
-    map.put("x-dead-letter-exchange",RabbitMqConstant.DEAD_EXCHANGE_ONE);
-    map.put("x-dead-letter-routing-key",RabbitMqConstant.DEAD_ROUTE_KEY_ONE);
-    return QueueBuilder.durable(RabbitMqConstant.QUEUE_ONE).withArguments(map).build();
+    return QueueBuilder.durable(RabbitMqConstant.QUEUE_ONE).build();
   }
-
-  @Bean("queueTwo")
+  //队列2
+  @Bean
   public Queue queueTwo(){
     HashMap<String, Object> map = new HashMap<>();
-    map.put("x-dead-letter-exchange",RabbitMqConstant.DEAD_EXCHANGE_ONE);
-    map.put("x-dead-letter-routing-key",RabbitMqConstant.DEAD_ROUTE_KEY_TWO);
+    map.put("x-dead-letter-exchange",RabbitMqConstant.DEAD_EXCHANGE);
+    map.put("x-dead-letter-routing-key",RabbitMqConstant.DEAD_ROUTE_KEY);
     return QueueBuilder.durable(RabbitMqConstant.QUEUE_TWO).withArguments(map).build();
   }
-
-  @Bean("deadQueueOne")
-  public Queue deadQueueOne(){
-    return new Queue(RabbitMqConstant.DEAD_QUEUE_ONE);
+  //死信队列
+  @Bean
+  public Queue deadQueue(){
+    return new Queue(RabbitMqConstant.DEAD_QUEUE);
+  }
+  //延时队列
+  @Bean
+  public Queue delayedQueue(){
+    return new Queue(RabbitMqConstant.DELAYED_QUEUE,true);
   }
 
-  @Bean("deadQueueOne")
-  public Queue deadQueueTwo(){
-    return new Queue(RabbitMqConstant.DEAD_QUEUE_TWO);
+  @Bean
+  public Binding bindingDelayedQueue(){
+    return BindingBuilder.bind(delayedQueue()).to(delayedExchange()).with(RabbitMqConstant.DELAYED_ROUTE_KEY).noargs();
   }
 
   @Bean
@@ -113,13 +83,8 @@ public class ExchangeConfig {
   }
 
   @Bean
-  public Binding bindingDeadQueueOne(){
-    return BindingBuilder.bind(deadQueueOne()).to(deadExchange()).with(RabbitMqConstant.DEAD_ROUTE_KEY_ONE);
-  }
-
-  @Bean
-  public Binding bindingDeadQueueTwo(){
-    return BindingBuilder.bind(deadQueueTwo()).to(deadExchange()).with(RabbitMqConstant.DEAD_ROUTE_KEY_TWO);
+  public Binding bindingDeadQueue(){
+    return BindingBuilder.bind(deadQueue()).to(deadExchange()).with(RabbitMqConstant.DEAD_ROUTE_KEY);
   }
 
 

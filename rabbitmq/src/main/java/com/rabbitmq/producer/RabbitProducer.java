@@ -30,7 +30,7 @@ public class RabbitProducer {
         messageProperties.setContentType("application/json");
         Message message = new Message(str.getBytes(StandardCharsets.UTF_8),messageProperties);
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
-        rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE_ONE,RabbitMqConstant.ROUTE_KEY_ONE,message,correlationData);
+        rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE,RabbitMqConstant.ROUTE_KEY_ONE,message,correlationData);
     }
 
 
@@ -43,8 +43,23 @@ public class RabbitProducer {
         Message message = new Message(str.getBytes(StandardCharsets.UTF_8),messageProperties);
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
         log.info("startTime:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        //设置消息 过期时间，消息发送到队列2，当过期时间到了  消息没有被消费，就会转到 添加的死信的队列，可以做出简易的延时队列
         message.getMessageProperties().setExpiration("10000");
-        rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE_ONE,RabbitMqConstant.ROUTE_KEY_TWO,message,correlationData);
+        rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE,RabbitMqConstant.ROUTE_KEY_TWO,message,correlationData);
+    }
+
+
+    public void sendMessageToDelayedQueue(String str,Integer delayed){
+        TestTime time = new TestTime().setInformation(str).setStartTime(new Date());
+        testTimeService.save(time);
+        MessageProperties messageProperties = new MessageProperties();
+        str = str+","+time.getId();
+        messageProperties.setContentType("application/json");
+        messageProperties.setDelay(delayed);
+        Message message = new Message(str.getBytes(StandardCharsets.UTF_8),messageProperties);
+        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        log.info("startTime:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        rabbitTemplate.convertAndSend(RabbitMqConstant.DELAYED_EXCHANGE,RabbitMqConstant.DELAYED_ROUTE_KEY,message,correlationData);
     }
 
 }
