@@ -16,14 +16,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-
 @Configuration
 @Slf4j
 public class RabbitMqConfig {
-
   @Autowired
-  private RabbitTemplate rabbitTemplate;
+  @Bean
+  public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory){
+    RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+    rabbitTemplate.setMandatory(true);
+    rabbitTemplate.setConfirmCallback(new ConfirmCallbackImpl());
+    rabbitTemplate.setReturnsCallback(new ReturnsCallbackImpl());
+    return rabbitTemplate;
+  }
 
   /**
    * 自定义JSON消息序列化器, 默认就是json
@@ -42,46 +46,32 @@ public class RabbitMqConfig {
     return factory;
   }
 
-
-
-  @PostConstruct
-  public void configureRabbitTemplate() {
-    // 比如在这里设置接收消息后的回调方法
-    rabbitTemplate.setConfirmCallback(new ConfirmCallbackImpl());
-    rabbitTemplate.setReturnsCallback(new ReturnsCallbackImpl());
-  }
-
-
   /**
    * 成功后的回调方法
    */
   public static class ConfirmCallbackImpl implements ConfirmCallback {
-
     /**
      * 实现confirm方法
-     *
      * @param correlationData
      * @param ack
      * @param cause
      */
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-        log.info("success：data："+correlationData);
-        log.info("success：ack："+ack);
-        log.info("success：cause："+cause);
+        log.info("消息：data："+correlationData);
+        log.info("是否成功：ack："+ack);
+        log.info("原因：cause："+cause);
     }
   }
 
 
   /**
-   * 失败后的回调方法
+   * 消息从交换器路由到队列失败后的回调方法
    */
   public static class ReturnsCallbackImpl implements ReturnsCallback {
-
-
     @Override
     public void returnedMessage(ReturnedMessage returned) {
-      log.info("return：data："+returned);
+      log.info("消息发送失败，退回交换机：data："+returned);
     }
   }
 }

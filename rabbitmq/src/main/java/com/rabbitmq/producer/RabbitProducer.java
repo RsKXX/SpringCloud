@@ -5,16 +5,17 @@ import com.rabbitmq.constant.RabbitMqConstant;
 import com.rabbitmq.data.entity.TestTime;
 import com.rabbitmq.service.TestTimeService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
-import java.nio.charset.StandardCharsets;
 
 @Component
 @Slf4j
@@ -25,6 +26,10 @@ public class RabbitProducer {
     @Autowired
     private TestTimeService testTimeService;
 
+    /**
+     * 发送到direct交换器，正常路由到队列消费
+     * @param str
+     */
     public void sendMessageToOne(String str){
         MessageProperties messageProperties = new MessageProperties();
         messageProperties.setContentType("application/json");
@@ -33,7 +38,10 @@ public class RabbitProducer {
         rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE,RabbitMqConstant.ROUTE_KEY_ONE,message,correlationData);
     }
 
-
+    /**
+     * 发送到队列二 设置过期时间，消息流转到死信队列，变成延时队列
+     * @param str
+     */
     public void sendMessageToTwo(String str){
         TestTime time = new TestTime().setInformation(str).setStartTime(new Date());
         testTimeService.save(time);
@@ -48,7 +56,11 @@ public class RabbitProducer {
         rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE,RabbitMqConstant.ROUTE_KEY_TWO,message,correlationData);
     }
 
-
+    /**
+     * 发送到延时队列
+     * @param str
+     * @param delayed
+     */
     public void sendMessageToDelayedQueue(String str,Integer delayed){
         TestTime time = new TestTime().setInformation(str).setStartTime(new Date());
         testTimeService.save(time);

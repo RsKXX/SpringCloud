@@ -40,7 +40,7 @@ public class RabbitConsumer {
         }catch (Exception e) {
             Boolean redelivered = message.getMessageProperties().getRedelivered();
             if (redelivered) {
-                log.error("异常重试次数已到达设置次数，将发送到死信交换机");
+                log.error("异常重试次数已到达设置次数");
                 channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
             } else {
                 log.error("消息即将返回队列处理重试");

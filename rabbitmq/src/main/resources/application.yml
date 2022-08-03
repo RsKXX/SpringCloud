@@ -9,8 +9,15 @@ spring:
     username: guest
     password: guest
     virtual-host: /
+    #发布确认属性
     publisher-confirm-type: correlated
     publisher-returns: true
+    template:
+      mandatory: true
+    listener:
+      type: simple
+      simple:
+        acknowledge-mode: manual
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/study?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
